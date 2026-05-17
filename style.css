@@ -1,0 +1,298 @@
+/* ==========================================================
+   リセット & ベーススタイル
+   ブラウザごとのデフォルト余白の差異をなくし、
+   box-sizing: border-box でpadding/borderを幅の計算に含める。
+   ========================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* body全体をフレックスボックスで縦横中央に配置し、
+   画面の高さいっぱいに使う（min-height: 100vh）。
+   薄いグレーの背景でカード要素が浮き立って見えるようにする。 */
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  background-color: #eef2f7;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;    /* 縦方向の中央揃え */
+  justify-content: center; /* 横方向の中央揃え */
+  padding: 20px;
+}
+
+/* ==========================================================
+   レイアウト
+   ========================================================== */
+
+/* コンテンツ幅を最大640pxに制限。
+   スマートフォンでは画面幅いっぱいに広がり、
+   PCでは中央の限られた幅に収まってすっきり見える。 */
+.container {
+  width: 100%;
+  max-width: 640px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+header h1 {
+  font-size: 1.6rem;
+  color: #2c5282;       /* ダークブルーでタイトルを強調 */
+  letter-spacing: 0.05em; /* 文字間隔を少し広げて読みやすくする */
+}
+
+/* ==========================================================
+   進捗エリア（問題番号 ＋ プログレスバー）
+   ========================================================== */
+
+/* 問題番号テキストとプログレスバーを横並びに配置する */
+.progress-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* 問題番号テキスト。white-space: nowrap で改行させない */
+#question-number {
+  font-size: 0.9rem;
+  color: #555;
+  white-space: nowrap;
+}
+
+/* プログレスバーの外枠（グレーの細い帯）。
+   overflow: hidden で内側の青い帯がはみ出さないようにする。
+   flex: 1 で残った横幅をすべて使う。 */
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background-color: #d0d9e8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* プログレスバーの内側（青い帯）。
+   script.js が style.width を動的に変更することで進捗を表現する。
+   transition で幅が変わるときになめらかにアニメーションする。 */
+#progress-fill {
+  height: 100%;
+  background-color: #4a7fc1;
+  border-radius: 4px;
+  transition: width 0.4s ease; /* 0.4秒かけてなめらかに幅が変化 */
+  width: 0%;                   /* 初期状態は幅ゼロ */
+}
+
+/* ==========================================================
+   問題カード
+   ========================================================== */
+
+/* 問題文を白いカードで囲み、box-shadowで浮き上がって見せる */
+.question-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+#question-text {
+  font-size: 1.15rem;
+  line-height: 1.7;   /* 行間を広めにして読みやすくする */
+  font-weight: 600;
+  color: #1a202c;
+}
+
+/* ==========================================================
+   選択肢ボタン群
+   ========================================================== */
+
+/* 選択肢ボタンを縦に並べるコンテナ。gap で間隔を統一する */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* 選択肢ボタンの通常状態（未回答）。
+   水色の背景と青い枠線でクリック可能な要素とわかるようにする。
+   transition で背景色・枠色・位置の変化をなめらかにする。 */
+.choice-btn {
+  background: #dbeafe;          /* 薄い水色の背景 */
+  border: 2px solid #4a7fc1;   /* 青い枠線 */
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 1rem;
+  color: #1e3a5f;               /* 濃い紺色のテキスト */
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* ホバー状態（マウスを乗せたとき）。
+   :not(:disabled) で回答後の無効状態には反応しないようにする。
+   transform: translateY(-1px) でボタンが少し浮き上がる演出。 */
+.choice-btn:hover:not(:disabled) {
+  background: #bfdbfe;
+  border-color: #2c5282;
+  transform: translateY(-1px);
+}
+
+/* 回答後の無効状態。カーソルをデフォルトに戻してクリックできない雰囲気を出す */
+.choice-btn:disabled {
+  cursor: default;
+}
+
+/* 正解ボタンの色（回答後に付与されるクラス）。緑系で正解を示す */
+.choice-btn.correct {
+  background: #e6f9f0;
+  border-color: #38a169;
+  color: #276749;
+  font-weight: 600;
+}
+
+/* 不正解ボタンの色（ユーザーが選んだ誤答に付与されるクラス）。赤系で不正解を示す */
+.choice-btn.incorrect {
+  background: #fff5f5;
+  border-color: #e53e3e;
+  color: #9b2c2c;
+}
+
+/* ==========================================================
+   フィードバックエリア（正誤メッセージ＋解説）
+   回答後に script.js が .hidden を外して表示する。
+   正解か不正解かで correct-fb / incorrect-fb クラスが付与され、
+   左のボーダーカラーと背景色が変わる。
+   ========================================================== */
+.feedback {
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* 正解時のフィードバック：緑の左ボーダー＋薄緑の背景 */
+.feedback.correct-fb {
+  background: #e6f9f0;
+  border-left: 4px solid #38a169;
+}
+
+/* 不正解時のフィードバック：赤の左ボーダー＋薄赤の背景 */
+.feedback.incorrect-fb {
+  background: #fff5f5;
+  border-left: 4px solid #e53e3e;
+}
+
+/* 「⭕ 正解！」または「✖ 不正解」の太字テキスト */
+#feedback-text {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* 正解・不正解でテキスト色を切り替える */
+.feedback.correct-fb #feedback-text   { color: #276749; }
+.feedback.incorrect-fb #feedback-text { color: #9b2c2c; }
+
+/* 解説文。フィードバックテキストより小さく、グレーで脇役的に表示 */
+#explanation-text {
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+/* ==========================================================
+   汎用ボタン（.btn）
+   「次の問題へ」「結果を見る」「もう一度挑戦する」に使用。
+   display: block と width: 100% で横幅いっぱいに広がる。
+   ========================================================== */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #4a7fc1;  /* 青いボタン */
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.03em;
+}
+
+/* ホバー時：背景を濃い青にして少し浮かせる */
+.btn:hover {
+  background: #2c5282;
+  transform: translateY(-1px);
+}
+
+/* クリック時：浮きを元に戻して押し込んだ感を出す */
+.btn:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================
+   結果画面
+   ========================================================== */
+
+/* 結果をまとめて見せるカード。クイズカードより大きめの余白と影を設定 */
+.result-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* スコアに応じた絵文字アイコン（🏆🎉👍📚）を大きく表示 */
+.result-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.result-card h2 {
+  font-size: 1.5rem;
+  color: #1a202c;
+  margin-bottom: 20px;
+}
+
+/* 「あなたのスコア」ラベル。小さく薄い色でサブテキスト的に表示 */
+.score-label {
+  font-size: 0.9rem;
+  color: #718096;
+  margin-bottom: 6px;
+}
+
+/* 「10問中 X問 正解」を大きく目立たせる */
+.score-number {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2c5282;
+  margin-bottom: 12px;
+}
+
+/* スコアに応じたメッセージ文 */
+.score-message {
+  font-size: 1rem;
+  color: #4a5568;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+/* ==========================================================
+   ユーティリティ
+   ========================================================== */
+
+/* .hidden クラスを付与した要素を非表示にする。
+   script.js でこのクラスを追加・削除することで
+   クイズ画面と結果画面、各UIパーツの表示切り替えを行う。 */
+.hidden {
+  display: none;
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- 日本語ページとして宣言 -->
+<html lang="ja">
+<head>
+  <!-- 文字コードをUTF-8に指定（日本語対応） -->
+  <meta charset="UTF-8">
+  <!-- スマートフォンなどでも適切な表示幅になるよう設定 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一般常識クイズ</title>
+  <!-- 外部スタイルシートの読み込み -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ページ全体を中央寄せするラッパー -->
+  <div class="container">
+    <header>
+      <h1>一般常識クイズ</h1>
+    </header>
+
+    <main>
+      <!-- ========== クイズ画面（回答中に表示） ========== -->
+      <div id="quiz-screen">
+
+        <!-- 進捗エリア：問題番号とプログレスバー -->
+        <div class="progress-area">
+          <!-- 「問題 X / 10」の表示。script.jsで動的に更新される -->
+          <span id="question-number">問題 1 / 10</span>
+          <!-- プログレスバーの外枠 -->
+          <div class="progress-bar">
+            <!-- 回答が進むにつれてwidthが広がるバー。script.jsで幅を制御 -->
+            <div id="progress-fill"></div>
+          </div>
+        </div>
+
+        <!-- 問題文カード。テキストはscript.jsで挿入される -->
+        <div class="question-card">
+          <p id="question-text"></p>
+        </div>
+
+        <!-- 選択肢ボタンの挿入先。4つのボタンをscript.jsで動的に生成 -->
+        <div id="choices-container" class="choices"></div>
+
+        <!-- 正解・不正解のフィードバック。初期状態は非表示（hidden） -->
+        <div id="feedback" class="feedback hidden">
+          <!-- 「⭕ 正解！」または「✖ 不正解」の短いメッセージ -->
+          <p id="feedback-text"></p>
+          <!-- 問題の解説文 -->
+          <p id="explanation-text"></p>
+        </div>
+
+        <!-- 「次の問題へ」ボタン。回答後にscript.jsでhiddenクラスを外して表示 -->
+        <!-- 最終問題では「結果を見る」に文言が変わる -->
+        <button id="next-btn" class="btn hidden">次の問題へ &rarr;</button>
+      </div>
+
+      <!-- ========== 結果画面（全問回答後に表示） ========== -->
+      <!-- 初期状態は非表示（hidden）。全問終了後にscript.jsで切り替える -->
+      <div id="result-screen" class="hidden">
+        <div class="result-card">
+          <!-- スコアに応じた絵文字アイコン（🏆🎉👍📚）。script.jsで設定 -->
+          <div id="result-icon" class="result-icon"></div>
+          <h2>クイズ終了！</h2>
+          <p class="score-label">あなたのスコア</p>
+          <!-- 「10問中 X問 正解」の文言。script.jsで設定 -->
+          <p id="score-text" class="score-number"></p>
+          <!-- スコアに応じたメッセージ。script.jsで設定 -->
+          <p id="score-message" class="score-message"></p>
+          <!-- クリックするとquiz-screenに戻り最初からやり直す -->
+          <button id="retry-btn" class="btn">もう一度挑戦する</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- クイズのロジックを担うJavaScriptファイル -->
+  <script src="script.js"></script>
+</body>
+</html>
