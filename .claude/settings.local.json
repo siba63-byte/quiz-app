@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls ~/.claude/projects/ 2>/dev/null | head -20)",
+      "Read(//c/Users/user/.claude/projects/**)",
+      "Bash(python -c ' *)",
+      "Bash(mkdir -p \"c:/Users/user/Documents/Claude_Work/quiz-app/.claude\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\user\\Documents\\Claude_Work\\quiz-app\\.claude"
+    ]
+  }
+}

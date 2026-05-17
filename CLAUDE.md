@@ -53,6 +53,10 @@ npx serve .
 
 グローバル汚染を避けるため、各 JS ファイルは即時関数（IIFE）またはモジュールスコープで記述する。
 
+## GitHubリポジトリ
+
+https://github.com/siba63-byte/quiz-app.git
+
 ## 業務ルール
 
 - ファイルの削除・上書き前には必ず確認を求めること
